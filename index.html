@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리더십 유형 자가진단</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- 진단 섹션 -->
+    <section id="assessment" class="section active">
+        <h1>4가지 리더십 유형 자가진단 (20문항)</h1>
+        <div id="progress">1/20</div>
+        <form id="quizForm">
+            <div id="questions"></div>
+            <button type="button" id="nextQuestion">다음 질문</button>
+            <button type="submit" id="submitQuiz">결과 보기</button>
+        </form>
+        <div class="result" id="result"></div>
+    </section>
+
+    <!-- 유형 비교 섹션 -->
+    <section id="comparison" class="section"></section>
+
+    <!-- 유형별 개선 방향 섹션 -->
+    <section id="improvement" class="section"></section>
+
+    <!-- 팔로우십 유형 섹션 -->
+    <section id="followership" class="section"></section>
+
+    <!-- 리더십-팔로우십 관계 섹션 -->
+    <section id="leadership_followership_relation" class="section"></section>
+
+    <!-- 리더십-팔로우십 매트릭스 섹션 -->
+    <section id="leadership_followership_matrix" class="section"></section>
+
+    <!-- JS 파일 연결 -->
+    <script src="js/data.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/quiz.js"></script>
+    <script src="js/sections.js"></script>
+</body>
+</html>

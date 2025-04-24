@@ -1,0 +1,180 @@
+/* 공통 스타일 */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f4f7fb;
+    padding: 30px;
+    max-width: 800px;
+    margin: auto;
+    line-height: 1.7;
+}
+
+h1, h2, h3 {
+    text-align: center;
+    color: #000000;
+}
+
+h2 { font-size: 24px; margin-bottom: 20px; }
+h3 { font-size: 20px; margin-bottom: 20px; }
+
+/* 섹션 스타일 */
+.section {
+    display: none;
+    margin-bottom: 30px;
+}
+
+.section.active {
+    display: block;
+}
+
+/* 질문 스타일 */
+.question {
+    margin: 20px 0;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.scale {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.scale label {
+    margin: 5px 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.scale input[type="radio"] {
+    margin-right: 5px;
+}
+
+/* 버튼 스타일 */
+button {
+    margin-top: 15px;
+    padding: 12px 24px;
+    font-size: 18px;
+    background-color: #e6f4fa;
+    color: #000000;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #cce5f0;
+}
+
+#nextQuestion, #submitQuiz {
+    display: none;
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+}
+
+#nextQuestion:hover, #submitQuiz:hover {
+    background-color: #2980b9;
+}
+
+/* 네비게이션 버튼 스타일 */
+.navigation-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.navigation-buttons button {
+    flex: 1 1 calc(33.333% - 10px);
+    margin-top: 0;
+    min-width: 150px;
+}
+
+.navigation-buttons button:nth-child(1) { background-color: #a8e6cf; }
+.navigation-buttons button:nth-child(2) { background-color: #b5d8ff; }
+.navigation-buttons button:nth-child(3) { background-color: #d3b5e5; }
+.navigation-buttons button:nth-child(4) { background-color: #e6f4fa; }
+
+/* 결과 스타일 */
+.result {
+    margin-top: 40px;
+    font-size: 20px;
+    text-align: center;
+    font-weight: bold;
+    color: #000000;
+}
+
+.result-container {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* 진행 상황 표시 */
+#progress {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #2980b9;
+}
+
+/* 점수 막대 그래프 */
+.score-bar {
+    background-color: #eee;
+    border-radius: 10px;
+    height: 20px;
+    width: 100%;
+}
+
+.score-fill {
+    border-radius: 10px;
+    height: 20px;
+}
+
+.score-fill.highest { background-color: #cfe2ff; }
+.score-fill.normal { background-color: #95a5a6; }
+
+/* 유형 비교 스타일 */
+.type-comparison, .improvement {
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* 유형 선택 버튼 */
+.type-selection-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.type-selection-buttons button {
+    width: calc(50% - 10px);
+    margin-top: 5px;
+}
+
+.mom-type { background-color: #f8d7da; color: #721c24; }
+.coach-type { background-color: #cfe2ff; color: #084298; }
+.craftsman-type { background-color: #e2d4f0; color: #5a348b; }
+.commander-type { background-color: #fff3cd; color: #856404; }
+
+@media (max-width: 600px) {
+    .navigation-buttons button {
+        flex: 1 1 100%;
+    }
+} 
