@@ -1,180 +1,256 @@
-/* 공통 스타일 */
+/* 기본 스타일 */
 body {
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #f4f7fb;
-    padding: 30px;
+    font-family: 'Arial', sans-serif;
     max-width: 800px;
-    margin: auto;
-    line-height: 1.7;
+    margin: 0 auto;
+    padding: 20px;
+    line-height: 1.6;
+    color: #333;
 }
 
-h1, h2, h3 {
-    text-align: center;
-    color: #000000;
+h1 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 28px;
 }
 
-h2 { font-size: 24px; margin-bottom: 20px; }
-h3 { font-size: 20px; margin-bottom: 20px; }
+h2 {
+    color: #3498db;
+    margin: 20px 0 10px;
+    font-size: 22px;
+}
 
-/* 섹션 스타일 */
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 10px 5px 10px 0;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
 .section {
     display: none;
-    margin-bottom: 30px;
+    padding: 20px 0;
 }
 
 .section.active {
     display: block;
 }
 
-/* 질문 스타일 */
-.question {
-    margin: 20px 0;
+/* 진단 폼 스타일 */
+#quizForm {
+    background-color: #f9f9f9;
     padding: 20px;
-    background: #fff;
     border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
 }
 
-.scale {
-    margin-top: 15px;
+#progress {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.question {
+    margin-bottom: 20px;
+}
+
+.question p {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.options {
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    flex-direction: column;
 }
 
-.scale label {
-    margin: 5px 10px;
-    cursor: pointer;
+.option {
+    margin: 5px 0;
+}
+
+.option label {
     display: flex;
     align-items: center;
-}
-
-.scale input[type="radio"] {
-    margin-right: 5px;
-}
-
-/* 버튼 스타일 */
-button {
-    margin-top: 15px;
-    padding: 12px 24px;
-    font-size: 18px;
-    background-color: #e6f4fa;
-    color: #000000;
-    border: none;
-    border-radius: 6px;
     cursor: pointer;
-    display: block;
-    width: 100%;
-    transition: background-color 0.3s;
 }
 
-button:hover {
-    background-color: #cce5f0;
+.option input[type="radio"] {
+    margin-right: 10px;
 }
 
-#nextQuestion, #submitQuiz {
+#submitQuiz {
     display: none;
-    background-color: #3498db;
-    color: white;
-    font-weight: bold;
+    background-color: #27ae60;
 }
 
-#nextQuestion:hover, #submitQuiz:hover {
-    background-color: #2980b9;
+#submitQuiz:hover {
+    background-color: #219653;
 }
-
-/* 네비게이션 버튼 스타일 */
-.navigation-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 30px;
-}
-
-.navigation-buttons button {
-    flex: 1 1 calc(33.333% - 10px);
-    margin-top: 0;
-    min-width: 150px;
-}
-
-.navigation-buttons button:nth-child(1) { background-color: #a8e6cf; }
-.navigation-buttons button:nth-child(2) { background-color: #b5d8ff; }
-.navigation-buttons button:nth-child(3) { background-color: #d3b5e5; }
-.navigation-buttons button:nth-child(4) { background-color: #e6f4fa; }
 
 /* 결과 스타일 */
 .result {
-    margin-top: 40px;
-    font-size: 20px;
+    display: none;
+    background-color: #eaf2f8;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.result h2 {
+    color: #2980b9;
+    margin-top: 0;
     text-align: center;
-    font-weight: bold;
-    color: #000000;
+    font-size: 24px;
+}
+
+.result h3 {
+    color: #2980b9;
+    margin: 25px 0 15px;
+    text-align: center;
+    font-size: 20px;
 }
 
 .result-container {
-    margin: 20px 0;
-    padding: 20px;
     background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    width: 100%;
-    box-sizing: border-box;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
 }
 
-/* 진행 상황 표시 */
-#progress {
-    text-align: center;
-    font-size: 18px;
-    margin-bottom: 15px;
-    color: #2980b9;
-}
-
-/* 점수 막대 그래프 */
+/* 점수 차트 스타일 */
 .score-bar {
     background-color: #eee;
     border-radius: 10px;
     height: 20px;
     width: 100%;
+    overflow: hidden;
 }
 
 .score-fill {
-    border-radius: 10px;
     height: 20px;
+    border-radius: 10px;
 }
 
-.score-fill.highest { background-color: #cfe2ff; }
-.score-fill.normal { background-color: #95a5a6; }
+.score-fill.highest {
+    background-color: #3498db;
+}
 
-/* 유형 비교 스타일 */
+.score-fill.normal {
+    background-color: #95a5a6;
+}
+
+.result-chart {
+    margin: 20px 0;
+    height: 300px;
+}
+
+.navigation-buttons {
+    margin-top: 20px;
+}
+
+/* 유형 비교 및 개선 방향 스타일 */
 .type-comparison, .improvement {
-    margin-bottom: 30px;
+    background-color: #f9f9f9;
     padding: 15px;
-    background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
 }
 
-/* 유형 선택 버튼 */
-.type-selection-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
-    margin-bottom: 30px;
+.type-comparison h2, .improvement h2 {
+    margin-top: 0;
+    color: #2980b9;
 }
 
-.type-selection-buttons button {
-    width: calc(50% - 10px);
-    margin-top: 5px;
+/* 매트릭스 아이템 스타일 */
+.matrix-item {
+    margin-bottom: 20px;
+    padding: 15px 15px 15px 25px;
+    border-left: 3px solid #2980b9;
+    background-color: #f9f9f9;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-radius: 0 4px 4px 0;
 }
 
-.mom-type { background-color: #f8d7da; color: #721c24; }
-.coach-type { background-color: #cfe2ff; color: #084298; }
-.craftsman-type { background-color: #e2d4f0; color: #5a348b; }
-.commander-type { background-color: #fff3cd; color: #856404; }
+.matrix-item h3 {
+    color: #2980b9;
+    margin-top: 0;
+    font-size: 18px;
+}
 
-@media (max-width: 600px) {
+.matrix-advice {
+    margin-top: 10px;
+    border-top: 1px dashed #ccc;
+    padding-top: 10px;
+    font-style: italic;
+    color: #555;
+}
+
+.matrix-advice strong {
+    color: #e67e22;
+}
+
+/* 모바일 환경을 위한 반응형 스타일 */
+@media (max-width: 768px) {
+    body {
+        font-size: 16px;
+        padding: 10px;
+    }
+    
+    section {
+        padding: 15px 10px;
+    }
+    
+    h1 {
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+    
+    h2 {
+        font-size: 20px;
+        margin: 15px 0 10px;
+    }
+    
+    p {
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+    
+    .navigation-buttons {
+        display: flex;
+        flex-direction: column;
+        margin-top: 20px;
+    }
+    
     .navigation-buttons button {
-        flex: 1 1 100%;
+        margin: 5px 0;
+        padding: 12px;
+        font-size: 16px;
+        width: 100%;
+    }
+    
+    .type-comparison, .improvement {
+        margin-bottom: 15px;
+        padding: 10px;
+    }
+    
+    .matrix-item {
+        padding: 12px 10px 12px 15px;
+        margin-bottom: 15px;
+    }
+    
+    /* 모바일에서의 테이블 스타일 */
+    table {
+        width: 100%;
+        display: block;
+        overflow-x: auto;
     }
 } 

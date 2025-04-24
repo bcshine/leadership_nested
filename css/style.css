@@ -1,0 +1,63 @@
+/* 모바일 환경을 위한 반응형 스타일 백업 */
+@media (max-width: 768px) {
+    body {
+        font-size: 16px;
+        padding: 10px;
+    }
+    
+    section {
+        padding: 15px 10px;
+    }
+    
+    h1 {
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+    
+    h2 {
+        font-size: 20px;
+        margin: 15px 0 10px;
+    }
+    
+    p {
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+    
+    .navigation-buttons {
+        display: flex;
+        flex-direction: column;
+        margin-top: 20px;
+    }
+    
+    .navigation-buttons button {
+        margin: 5px 0;
+        padding: 12px;
+        font-size: 16px;
+        width: 100%;
+    }
+    
+    .type-comparison, .improvement {
+        margin-bottom: 15px;
+        padding: 10px;
+    }
+    
+    .matrix-item {
+        padding: 12px 10px 12px 15px;
+        margin-bottom: 15px;
+    }
+    
+    /* 모바일에서의 테이블 스타일 */
+    table {
+        width: 100%;
+        display: block;
+        overflow-x: auto;
+    }
+    
+    /* 화면 전환 애니메이션 최적화 */
+    section {
+        transition: opacity 0.2s ease;
+    }
+} 
+
+/* 이 파일은 더이상 사용되지 않습니다. css/styles.css로 교체되었습니다. */ 

@@ -4,16 +4,42 @@
 
 // DOM이 로드된 후 각 섹션의 콘텐츠를 생성
 document.addEventListener('DOMContentLoaded', function() {
-    initSections();
+    console.log("UI 초기화 시작");
+    // 데이터 로딩을 확인한 후 섹션 초기화
+    setTimeout(function() {
+        initSections();
+    }, 500); // 데이터 로딩을 위한 약간의 지연
 });
 
 // 각 섹션 초기화
 function initSections() {
-    initComparisonSection();
-    initImprovementSection();
-    initFollowershipSection();
-    initRelationSection();
-    initMatrixSection();
+    console.log("모든 섹션 초기화 시작");
+    
+    // 데이터 로딩 상태 확인
+    if (typeof leadershipTypes === 'undefined' || 
+        typeof followershipTypes === 'undefined' || 
+        typeof leadershipFollowershipRelation === 'undefined' || 
+        typeof leadershipFollowershipMatrix === 'undefined') {
+        
+        console.warn("일부 데이터가 아직 로드되지 않았습니다. 0.5초 후 다시 시도합니다.");
+        
+        // 데이터가 로드될 때까지 대기 후 재시도
+        setTimeout(function() {
+            initSections();
+        }, 500);
+        return;
+    }
+    
+    try {
+        initComparisonSection();
+        initImprovementSection();
+        initFollowershipSection();
+        initRelationSection();
+        initMatrixSection();
+        console.log("모든 섹션 초기화 완료");
+    } catch (error) {
+        console.error("섹션 초기화 중 오류 발생:", error);
+    }
 }
 
 // 유형 비교 섹션 초기화
@@ -87,7 +113,7 @@ function initImprovementSection() {
 function createComparisonNavButtons() {
     return `
         <div class="navigation-buttons">
-            <button id="improvementButton" onclick="showSection('improvement')">유형별 개선 방향 보기</button>
+            <button onclick="showAllTypes('improvement')">모든 유형의 개선 방향 보기</button>
             <button onclick="showSection('assessment')">진단 결과로 돌아가기</button>
         </div>
     `;
@@ -97,7 +123,7 @@ function createComparisonNavButtons() {
 function createImprovementNavButtons() {
     return `
         <div class="navigation-buttons">
-            <button onclick="showSection('comparison')">모든 유형의 특성 보기</button>
+            <button onclick="showAllTypes('comparison')">모든 유형의 특성 보기</button>
             <button onclick="showSection('assessment')">진단 결과로 돌아가기</button>
         </div>
     `;
@@ -125,6 +151,9 @@ function initFollowershipSection() {
             throw new Error("followershipTypes가 배열이 아니거나 비어 있습니다.");
         }
         
+        // 모바일 호환성을 위한 먼저 데이터를 로깅
+        console.log("팔로우십 유형 데이터:", JSON.stringify(followershipTypes));
+        
         // 각 팔로우십 유형 추가
         followershipTypes.forEach((type, index) => {
             if (!type || !type.title || !type.description) {
@@ -140,12 +169,22 @@ function initFollowershipSection() {
                 </div>
             `;
         });
+        
+        // 데이터가 없는 경우 대체 메시지 표시
+        if (html === '<h1>팔로우십 유형</h1>') {
+            html += `
+                <div class="type-comparison">
+                    <p>팔로우십 유형 데이터가 없습니다. 페이지를 새로고침해 보세요.</p>
+                </div>
+            `;
+        }
     } catch (error) {
         console.error("팔로우십 데이터 처리 중 오류 발생:", error);
         html += `
             <div class="type-comparison">
                 <p>팔로우십 유형 데이터를 불러오는 중 오류가 발생했습니다.</p>
                 <p>오류 메시지: ${error.message}</p>
+                <button onclick="location.reload()">페이지 새로고침</button>
             </div>
         `;
     }
@@ -161,6 +200,10 @@ function initFollowershipSection() {
     
     // HTML 적용
     section.innerHTML = html;
+    
+    // 모바일 호환성을 위한 스타일 추가
+    addMobileStyles();
+    
     console.log("팔로우십 섹션 초기화 완료");
 }
 
@@ -186,18 +229,31 @@ function initRelationSection() {
             throw new Error("leadershipFollowershipRelation 값이 비어 있습니다.");
         }
         
+        // 모바일 호환성을 위한 데이터 로깅
+        console.log("리더십-팔로우십 관계 데이터 존재:", !!leadershipFollowershipRelation);
+        
         // 관계 설명 추가
         html += `
             <div class="type-comparison">
                 ${leadershipFollowershipRelation}
             </div>
         `;
+        
+        // 데이터가 비어있는 경우 대체 메시지 표시
+        if (leadershipFollowershipRelation.trim() === '') {
+            html += `
+                <div class="type-comparison">
+                    <p>리더십-팔로우십 관계 데이터가 없습니다. 페이지를 새로고침해 보세요.</p>
+                </div>
+            `;
+        }
     } catch (error) {
         console.error("리더십-팔로우십 관계 데이터 처리 중 오류 발생:", error);
         html += `
             <div class="type-comparison">
                 <p>리더십-팔로우십 관계 데이터를 불러오는 중 오류가 발생했습니다.</p>
                 <p>오류 메시지: ${error.message}</p>
+                <button onclick="location.reload()">페이지 새로고침</button>
             </div>
         `;
     }
@@ -213,6 +269,10 @@ function initRelationSection() {
     
     // HTML 적용
     section.innerHTML = html;
+    
+    // 모바일 호환성을 위한 스타일 추가
+    addMobileStyles();
+    
     console.log("리더십-팔로우십 관계 섹션 초기화 완료");
 }
 
@@ -396,4 +456,60 @@ function getMatrixAdvice(leaderType, followerType) {
     
     // 해당 조합의 조언 반환, 없으면 기본 조언 반환
     return adviceMap[key] || "이 조합에서는 서로의 강점을 이해하고 약점을 보완하기 위한 열린 소통이 중요합니다. 정기적인 미팅을 통해 기대치와 작업 방식에 대해 논의하세요.";
-} 
+}
+
+// 모바일 환경을 위한 스타일 추가 함수
+function addMobileStyles() {
+    // 이미 스타일이 추가되었는지 확인
+    if (document.getElementById('mobile-styles')) {
+        return;
+    }
+    
+    const style = document.createElement('style');
+    style.id = 'mobile-styles';
+    style.textContent = `
+        @media (max-width: 768px) {
+            .type-comparison {
+                padding: 10px;
+                margin-bottom: 15px;
+            }
+            
+            .matrix-item {
+                padding: 10px 10px 10px 15px;
+                margin-bottom: 15px;
+            }
+            
+            .navigation-buttons {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .navigation-buttons button {
+                margin: 5px 0;
+                padding: 12px;
+                font-size: 16px;
+            }
+            
+            h1 {
+                font-size: 24px;
+                margin-bottom: 15px;
+            }
+            
+            h2 {
+                font-size: 20px;
+            }
+            
+            .matrix-item h3 {
+                font-size: 16px;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    console.log("모바일 스타일 추가 완료");
+}
+
+// 전역 오류 핸들러 추가
+window.addEventListener('error', function(event) {
+    console.error('전역 오류 발생:', event.error);
+    alert('페이지 로딩 중 오류가 발생했습니다. 페이지를 새로고침해 보세요.');
+}); 

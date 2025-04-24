@@ -16,9 +16,38 @@ const progressDiv = document.getElementById("progress");
 
 // 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', function() {
+    console.log("퀴즈 초기화 시작");
+    
+    // DOM 요소 확인
+    if (!container) console.error("questions 요소를 찾을 수 없습니다");
+    if (!resultDiv) console.error("result 요소를 찾을 수 없습니다");
+    if (!nextQuestionBtn) console.error("nextQuestion 버튼을 찾을 수 없습니다");
+    if (!submitQuizBtn) console.error("submitQuiz 버튼을 찾을 수 없습니다");
+    if (!progressDiv) console.error("progress 요소를 찾을 수 없습니다");
+    
+    // 결과 영역 초기화
+    if (resultDiv) {
+        resultDiv.style.display = 'none';
+    }
+    
     // 모든 기존 질문 제거
-    container.innerHTML = '';
-    renderQuestion(0);
+    if (container) {
+        container.innerHTML = '';
+        renderQuestion(0);
+    }
+    
+    // 폼 제출 처리
+    const quizForm = document.getElementById("quizForm");
+    if (quizForm) {
+        quizForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+            showResult();
+        });
+    } else {
+        console.error("quizForm을 찾을 수 없습니다");
+    }
+    
+    console.log("퀴즈 초기화 완료");
 });
 
 // 질문 렌더링 함수
@@ -84,115 +113,173 @@ nextQuestionBtn.addEventListener('click', () => {
 });
 
 // 폼 제출 처리 (결과 보기 버튼용)
-document.getElementById("quizForm").addEventListener("submit", function(e) {
-    e.preventDefault();
-    showResult();
-});
+const quizForm = document.getElementById("quizForm");
+if (quizForm) {
+    quizForm.addEventListener("submit", function(e) {
+        console.log("퀴즈 폼 제출");
+        e.preventDefault();
+        showResult();
+    });
+} else {
+    console.error("퀴즈 폼이 존재하지 않습니다.");
+}
 
 // 결과 표시 함수
 function showResult() {
-    const scores = { 엄마형: 0, 코치형: 0, 장인형: 0, 지휘관형: 0 };
-
-    questions.forEach((q, i) => {
-        const score = answers[i];
-        scores[q.type] += score;
-    });
-
-    const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
-    const bestType = sortedScores[0][0]; // 유형 이름 저장
-    userLeaderType = bestType; // 전역 변수에 저장
-    
-    // 질문 컨테이너 숨기기
-    document.getElementById("questions").style.display = "none";
-    document.getElementById("progress").style.display = "none";
-    document.getElementById("nextQuestion").style.display = "none";
-    document.getElementById("submitQuiz").style.display = "none";
-    document.getElementById("quizForm").style.marginBottom = "0";
-    
-    // 섹션 타이틀 변경
-    document.querySelector("#assessment h1").textContent = "리더십 유형 자가진단 결과";
-    
-    // 최고 점수와 동일한 점수를 가진 유형들 찾기
-    const highestScore = sortedScores[0][1];
-    const highestTypes = sortedScores.filter(([_, score]) => score === highestScore)
-                                   .map(([type, _]) => type);
-    
-    // 리더십 유형 표시 텍스트 생성
-    let leadershipDisplay = '';
-    if (highestTypes.length === 1) {
-        leadershipDisplay = `<strong>${bestType}</strong> 입니다`;
-    } else {
-        // 동점 유형들을 나열
-        const typeIcons = {
-            "엄마형": "💖",
-            "코치형": "🧭",
-            "장인형": "🔧",
-            "지휘관형": "🚩"
-        };
+    try {
+        console.log("결과 계산 시작");
         
-        // 동점 리더십 타입 텍스트 생성
-        const typesText = highestTypes.map(type => {
-            let displayType = type;
-            if (type.length >= 4) {
-                const insertAt = Math.ceil(type.length / 2);
-                displayType = type.substring(0, insertAt) + '<wbr>' + type.substring(insertAt);
+        // 답변 확인 및 유효성 검사
+        if (answers.length !== questions.length) {
+            console.error("모든 질문에 답변하지 않았습니다:", answers);
+            alert("모든 질문에 답변해주세요.");
+            return;
+        }
+        
+        // 디버깅 정보 표시 (개발자 모드)
+        const debugAnswers = document.getElementById('debug-answers');
+        if (debugAnswers) {
+            debugAnswers.innerHTML = `<p>답변: ${JSON.stringify(answers)}</p>`;
+        }
+        
+        const scores = { 엄마형: 0, 코치형: 0, 장인형: 0, 지휘관형: 0 };
+
+        // 점수 계산
+        questions.forEach((q, i) => {
+            if (typeof answers[i] === 'undefined') {
+                console.warn(`질문 ${i+1}에 대한 답변이 없습니다.`);
+                return;
             }
-            return `<strong>${typeIcons[type]} ${displayType}</strong>`;
-        }).join(' / ');
+            const score = answers[i];
+            scores[q.type] += score;
+        });
+
+        // 디버깅 정보 표시 (개발자 모드)
+        const debugScores = document.getElementById('debug-scores');
+        if (debugScores) {
+            debugScores.innerHTML = `<p>점수: ${JSON.stringify(scores)}</p>`;
+        }
+
+        const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+        const bestType = sortedScores[0][0]; // 유형 이름 저장
+        userLeaderType = bestType; // 전역 변수에 저장
         
-        leadershipDisplay = `${typesText} <span style="display: inline-block;">입니다</span>`;
-    }
-    
-    // 점수 차트 생성
-    let scoreHtml = '';
-    sortedScores.forEach(([type, score]) => {
-        const barWidthPercent = Math.round((score / 25) * 100);
-        const isHighest = highestTypes.includes(type);
-        const typeIcon = type === "엄마형" ? "💖" : 
-                        type === "코치형" ? "🧭" : 
-                        type === "장인형" ? "🔧" : 
-                        "🚩";
+        console.log("진단 결과 계산 완료:", sortedScores);
         
-        scoreHtml += `
-        <div style="margin-bottom: 15px;">
-            <div style="display: flex; align-items: center; margin-bottom: 5px; flex-wrap: wrap;">
-                <div style="min-width: 80px; width: 25%; font-weight: ${isHighest ? 'bold' : 'normal'}; color: ${isHighest ? '#2980b9' : '#333'}; padding-right: 8px; white-space: nowrap;">
-                    ${typeIcon} ${type}
-                </div>
-                <div style="flex-grow: 1; min-width: 100px;">
-                    <div class="score-bar">
-                        <div class="score-fill ${isHighest ? 'highest' : 'normal'}" style="width: ${barWidthPercent}%;"></div>
+        // 질문 컨테이너 숨기기
+        document.getElementById("questions").style.display = "none";
+        document.getElementById("progress").style.display = "none";
+        document.getElementById("nextQuestion").style.display = "none";
+        document.getElementById("submitQuiz").style.display = "none";
+        document.getElementById("quizForm").style.marginBottom = "0";
+        
+        // 섹션 타이틀 변경
+        const sectionTitle = document.querySelector("#assessment h1");
+        if (sectionTitle) {
+            sectionTitle.textContent = "리더십 유형 자가진단 결과";
+        }
+        
+        // 최고 점수와 동일한 점수를 가진 유형들 찾기
+        const highestScore = sortedScores[0][1];
+        const highestTypes = sortedScores.filter(([_, score]) => score === highestScore)
+                                      .map(([type, _]) => type);
+        
+        // 리더십 유형 표시 텍스트 생성
+        let leadershipDisplay = '';
+        if (highestTypes.length === 1) {
+            leadershipDisplay = `<strong>${bestType}</strong> 입니다`;
+        } else {
+            // 동점 유형들을 나열
+            const typeIcons = {
+                "엄마형": "💖",
+                "코치형": "🧭",
+                "장인형": "🔧",
+                "지휘관형": "🚩"
+            };
+            
+            // 동점 리더십 타입 텍스트 생성
+            const typesText = highestTypes.map(type => {
+                let displayType = type;
+                if (type.length >= 4) {
+                    const insertAt = Math.ceil(type.length / 2);
+                    displayType = type.substring(0, insertAt) + '<wbr>' + type.substring(insertAt);
+                }
+                return `<strong>${typeIcons[type]} ${displayType}</strong>`;
+            }).join(' / ');
+            
+            leadershipDisplay = `${typesText} <span style="display: inline-block;">입니다</span>`;
+        }
+        
+        // 점수 차트 생성
+        let scoreHtml = '';
+        sortedScores.forEach(([type, score]) => {
+            const barWidthPercent = Math.round((score / 25) * 100);
+            const isHighest = highestTypes.includes(type);
+            const typeIcon = type === "엄마형" ? "💖" : 
+                            type === "코치형" ? "🧭" : 
+                            type === "장인형" ? "🔧" : 
+                            "🚩";
+            
+            scoreHtml += `
+            <div style="margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; margin-bottom: 5px; flex-wrap: wrap;">
+                    <div style="min-width: 80px; width: 25%; font-weight: ${isHighest ? 'bold' : 'normal'}; color: ${isHighest ? '#2980b9' : '#333'}; padding-right: 8px; white-space: nowrap;">
+                        ${typeIcon} ${type}
+                    </div>
+                    <div style="flex-grow: 1; min-width: 100px;">
+                        <div class="score-bar">
+                            <div class="score-fill ${isHighest ? 'highest' : 'normal'}" style="width: ${barWidthPercent}%;"></div>
+                        </div>
+                    </div>
+                    <div style="width: 60px; text-align: right; margin-left: 8px; font-weight: ${isHighest ? 'bold' : 'normal'};">
+                        ${score}/25점
                     </div>
                 </div>
-                <div style="width: 60px; text-align: right; margin-left: 8px; font-weight: ${isHighest ? 'bold' : 'normal'};">
-                    ${score}/25점
+            </div>`;
+        });
+        
+        // 결과 HTML 생성
+        if (!resultDiv) {
+            console.error("결과 표시 요소를 찾을 수 없습니다.");
+            alert("결과를 표시할 수 없습니다. 페이지를 새로고침해주세요.");
+            return;
+        }
+        
+        resultDiv.innerHTML = `
+            <div class="result-container">
+                <h2>🎯 당신의 리더십 유형은</h2>
+                <p style="font-size: ${highestTypes.length > 1 ? '24px' : '28px'}; text-align: center; color: #2980b9; margin-bottom: 25px;">
+                    ${leadershipDisplay}
+                </p>
+                
+                <h3>유형별 점수</h3>
+                <div style="width: 100%; margin: 0 auto 20px auto;">
+                    ${scoreHtml}
                 </div>
             </div>
-        </div>`;
-    });
-    
-    // 결과 HTML 생성
-    resultDiv.innerHTML = `
-        <div class="result-container">
-            <h2>🎯 당신의 리더십 유형은</h2>
-            <p style="font-size: ${highestTypes.length > 1 ? '24px' : '28px'}; text-align: center; color: #2980b9; margin-bottom: 25px;">
-                ${leadershipDisplay}
-            </p>
             
-            <h3>유형별 점수</h3>
-            <div style="width: 100%; margin: 0 auto 20px auto;">
-                ${scoreHtml}
+            <div class="navigation-buttons">
+                <button onclick="showSection('comparison', '${bestType}')">
+                    <span style="font-weight: bold;">${bestType}</span> 리더 유형의 특성 보기
+                </button>
+                <button onclick="showSection('improvement', '${bestType}')">
+                    <span style="font-weight: bold;">${bestType}</span> 리더 유형의 개선 방향
+                </button>
+                <button onclick="showSection('followership')">팔로우십 유형</button>
+                <button onclick="showSection('leadership_followership_relation')">리더십-팔로우십 관계</button>
+                <button onclick="showSection('leadership_followership_matrix')">리더십-팔로우십 매트릭스</button>
             </div>
-        </div>
+        `;
         
-        <div class="navigation-buttons">
-            <button onclick="showSection('comparison', '${bestType}')">내 ${bestType} 리더 유형의 특성 보기</button>
-            <button onclick="showSection('leadership_followership_relation')">리더십-팔로우십 관계</button>
-            <button onclick="showSection('followership')">팔로우십 유형</button>
-            <button onclick="showSection('leadership_followership_matrix')">리더십-팔로우십 매트릭스</button>
-        </div>
-    `;
-    
-    // 맨 위로 스크롤
-    window.scrollTo(0, 0);
+        // 결과 표시
+        resultDiv.style.display = "block";
+        
+        // 맨 위로 스크롤
+        window.scrollTo(0, 0);
+        
+        console.log("진단 결과 표시 완료");
+    } catch (error) {
+        console.error("결과 표시 중 오류 발생:", error);
+        alert("결과를 계산하는 중 오류가 발생했습니다. 페이지를 새로고침하고 다시 시도해주세요.");
+    }
 } 
