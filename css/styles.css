@@ -12,6 +12,7 @@ h1 {
     color: #2c3e50;
     margin-bottom: 20px;
     font-size: 28px;
+    text-align: center;
 }
 
 h2 {
@@ -266,25 +267,40 @@ button:hover {
         display: block;
         overflow-x: auto;
     }
+    
+    .scale {
+        max-width: 250px;
+    }
+    
+    .scale label {
+        width: 36px;
+        min-width: 36px;
+        padding: 8px 0;
+    }
 }
 
 /* 선택지(라디오 버튼) 스타일 */
 .scale {
     display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px;
+    justify-content: space-between;
+    width: 100%;
     margin-top: 20px;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .scale label {
     display: flex;
     align-items: center;
+    justify-content: center;
     cursor: pointer;
-    padding: 8px 15px;
+    padding: 8px 0;
     border-radius: 5px;
     background-color: #f8f9fa;
     transition: background-color 0.2s;
+    width: 40px;
+    min-width: 40px;
 }
 
 .scale label:hover {
@@ -292,5 +308,5 @@ button:hover {
 }
 
 .scale input[type="radio"] {
-    margin-right: 10px;
+    margin-right: 2px;
 } 

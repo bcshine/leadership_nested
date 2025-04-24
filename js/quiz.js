@@ -64,7 +64,7 @@ function renderQuestion(index) {
         <p class="question-text">${q.text}</p>
         <div class="scale">
             ${[1,2,3,4,5].map(n =>
-                `<label><input type="radio" name="q${index}" value="${n}" required /> ${n}</label>`
+                `<label><input type="radio" name="q${index}" value="${n}" required />${n}</label>`
             ).join("")}
         </div>
     `;
