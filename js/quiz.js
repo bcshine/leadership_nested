@@ -58,11 +58,16 @@ function renderQuestion(index) {
     const q = questions[index];
     const div = document.createElement("div");
     div.className = "question active";
-    div.innerHTML = `<strong>${q.text}</strong><div class="scale">` +
-        [1,2,3,4,5].map(n =>
-            `<label><input type="radio" name="q${index}" value="${n}" required /> ${n}</label>`
-        ).join("") +
-        `</div>`;
+    
+    // 질문 텍스트를 p 태그로 변경하여 중앙 정렬 스타일 적용
+    div.innerHTML = `
+        <p class="question-text">${q.text}</p>
+        <div class="scale">
+            ${[1,2,3,4,5].map(n =>
+                `<label><input type="radio" name="q${index}" value="${n}" required /> ${n}</label>`
+            ).join("")}
+        </div>
+    `;
     
     container.appendChild(div);
     

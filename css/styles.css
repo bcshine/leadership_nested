@@ -56,15 +56,28 @@ button:hover {
 #progress {
     font-weight: bold;
     margin-bottom: 15px;
+    text-align: center;
+    font-size: 16px;
+    color: #2980b9;
+}
+
+/* 버튼 중앙 정렬 */
+#quizForm button {
+    display: block;
+    margin: 15px auto;
+    min-width: 200px;
 }
 
 .question {
     margin-bottom: 20px;
+    text-align: center;
 }
 
-.question p {
+.question p, .question strong {
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    display: block;
+    font-size: 18px;
 }
 
 .options {
@@ -253,4 +266,31 @@ button:hover {
         display: block;
         overflow-x: auto;
     }
+}
+
+/* 선택지(라디오 버튼) 스타일 */
+.scale {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.scale label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px 15px;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    transition: background-color 0.2s;
+}
+
+.scale label:hover {
+    background-color: #e9ecef;
+}
+
+.scale input[type="radio"] {
+    margin-right: 10px;
 } 
